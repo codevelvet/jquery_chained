@@ -40,10 +40,12 @@
 
                     /* Build data array from parents values. */
                     var data = {};
+                    var data_value = {};
                     $(settings.parents).each(function() {
                         var id = $(this).attr(settings.attribute);
                         var value = $(":selected", this).val();
                         data[id] = value;
+                        data_value = value;
 
                         /* Optionally also depend on values from these inputs. */
                         if (settings.depends) {
@@ -53,6 +55,7 @@
                                     var id = $(this).attr(settings.attribute);
                                     var value = $(this).val();
                                     data[id] = value;
+                                    data_value = value;
                                 }
                             });
                         }
@@ -78,7 +81,8 @@
                         $(self).trigger("change");
                     }
 
-                    request = $.getJSON(settings.url, data, function(json) {
+                    var url = settings.url + '/' + data_value;
+                    request = $.getJSON(url, { format: "json" }, function(json) {
                         build.call(self, json);
                         /* Force updating the children. */
                         $(self).trigger("change");
